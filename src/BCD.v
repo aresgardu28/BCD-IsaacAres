@@ -37,51 +37,51 @@ module Encoder (
     end
 endmodule
 
-module Display (
-    input clk,                   // Reloj maestro [cite: 191]
-    input btn_reset,             // Botón de reinicio [cite: 194]
-    output reg [2:0] dig,        // Selección de dígito (Comunes) [cite: 196]
-    output [7:0] seg             // Segmentos finales [cite: 199]
-);
-    // Divisor para obtener 4 Hz [cite: 203]
-    reg [23:0] clk_div;
-    reg [7:0] contador_reg;
+// module Display (
+//     input clk,                   // Reloj maestro [cite: 191]
+//     input btn_reset,             // Botón de reinicio [cite: 194]
+//     output reg [2:0] dig,        // Selección de dígito (Comunes) [cite: 196]
+//     output [7:0] seg             // Segmentos finales [cite: 199]
+// );
+//     // Divisor para obtener 4 Hz [cite: 203]
+//     reg [23:0] clk_div;
+//     reg [7:0] contador_reg;
 
-    always @(posedge clk) begin
-        if (btn_reset == 1'b0) begin // Reset activo en bajo [cite: 207]
-            contador_reg <= 8'd0;
-            clk_div <= 24'd0;
-        end else if (clk_div >= 12499999) begin // Basado en reloj de 50MHz [cite: 212]
-            clk_div <= 0;
-            if (contador_reg >= 255) contador_reg <= 0; // Límite de 8 bits [cite: 216, 218]
-            else contador_reg <= contador_reg + 1;
-        end else begin
-            clk_div <= clk_div + 1;
-        end
-    end
+//     always @(posedge clk) begin
+//         if (btn_reset == 1'b0) begin // Reset activo en bajo [cite: 207]
+//             contador_reg <= 8'd0;
+//             clk_div <= 24'd0;
+//         end else if (clk_div >= 12499999) begin // Basado en reloj de 50MHz [cite: 212]
+//             clk_div <= 0;
+//             if (contador_reg >= 255) contador_reg <= 0; // Límite de 8 bits [cite: 216, 218]
+//             else contador_reg <= contador_reg + 1;
+//         end else begin
+//             clk_div <= clk_div + 1;
+//         end
+//     end
 
-    // Instancia de BCD [cite: 224-227]
-    wire [3:0] c, d, u;
-    BCD bcd_inst (contador_reg, c, d, u);
+//     // Instancia de BCD [cite: 224-227]
+//     wire [3:0] c, d, u;
+//     BCD bcd_inst (contador_reg, c, d, u);
 
-    // Multiplexor de refresco visual [cite: 228-236]
-    reg [15:0] refresh;
-    always @(posedge clk) refresh <= refresh + 1;
+//     // Multiplexor de refresco visual [cite: 228-236]
+//     reg [15:0] refresh;
+//     always @(posedge clk) refresh <= refresh + 1;
 
-    reg [3:0] bcd_actual;
-    always @(*) begin
-        case (refresh[15:14])
-            2'b00: begin dig = 3'b110; bcd_actual = u; end // Unidades [cite: 234]
-            2'b01: begin dig = 3'b101; bcd_actual = d; end // Decenas [cite: 234]
-            2'b10: begin dig = 3'b011; bcd_actual = c; end // Centenas [cite: 235]
-            default: begin dig = 3'b111; bcd_actual = 4'h0; end
-        endcase
-    end
+//     reg [3:0] bcd_actual;
+//     always @(*) begin
+//         case (refresh[15:14])
+//             2'b00: begin dig = 3'b110; bcd_actual = u; end // Unidades [cite: 234]
+//             2'b01: begin dig = 3'b101; bcd_actual = d; end // Decenas [cite: 234]
+//             2'b10: begin dig = 3'b011; bcd_actual = c; end // Centenas [cite: 235]
+//             default: begin dig = 3'b111; bcd_actual = 4'h0; end
+//         endcase
+//     end
 
-    // Instancia del Encoder [cite: 237-251]
-    wire [6:0] s;
-    Encoder enc_inst (bcd_actual, s);
+//     // Instancia del Encoder [cite: 237-251]
+//     wire [6:0] s;
+//     Encoder enc_inst (bcd_actual, s);
     
-    // Asignación de segmentos [cite: 253-259]
-    assign seg = {1'b1, s}; // Se agrega el Punto Decimal (DP) apagado
-endmodule
+//     // Asignación de segmentos [cite: 253-259]
+//     assign seg = {1'b1, s}; // Se agrega el Punto Decimal (DP) apagado
+// endmodule
