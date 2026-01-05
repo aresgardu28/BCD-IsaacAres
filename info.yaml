@@ -56,29 +56,20 @@
 # yaml_version: 6
 
 
-# Tiny Tapeout project information
 project:
-  [cite_start]title:        "Contador BCD 3 Displays"      # Título del proyecto [cite: 5]
-  [cite_start]author:       "Ares Garduño e Isaac González" # Autores según el documento [cite: 7, 8]
-  discord:      ""      
-  [cite_start]description:  "Contador binario de 8 bits (0-255) visualizado en 3 displays de 7 segmentos" # [cite: 13, 24]
-  language:     "Verilog" 
-  clock_hz:     50000000       # Frecuencia de 50 MHz definida en tu config.json (20ns)
-
-  # Tu diseño es pequeño, 1x1 tiles es suficiente para un contador BCD
-  tiles: "1x1"          
-
-  # Nombre del módulo principal en project.v
-  top_module:  "tt_um_BCD"
-
-  # Debes listar ambos archivos para que la síntesis funcione correctamente
+  title:        "Contador BCD 3 Displays"
+  author:       "Ares Garduno e Isaac Gonzalez"
+  discord:      ""
+  description:  "Contador binario de 8 bits (0-255) visualizado en 3 displays de 7 segmentos"
+  language:     "Verilog"
+  clock_hz:     50000000
+  tiles:        "1x1"
+  top_module:   "tt_um_BCD"
   source_files:
     - "project.v"
     - "BCD.v"
 
-# Definición de pines para la documentación y el datasheet
 pinout:
-  # Entradas (No utilizadas en la lógica del contador)
   ui[0]: ""
   ui[1]: ""
   ui[2]: ""
@@ -87,8 +78,6 @@ pinout:
   ui[5]: ""
   ui[6]: ""
   ui[7]: ""
-
-  # Salidas (Mapeo Estándar de Segmentos) [cite: 130-131, 253-259]
   uo[0]: "SEG_A"
   uo[1]: "SEG_B"
   uo[2]: "SEG_C"
@@ -97,16 +86,13 @@ pinout:
   uo[5]: "SEG_F"
   uo[6]: "SEG_G"
   uo[7]: "SEG_DP"
-
-  # Pines Bidireccionales (Control de multiplexado de los 3 dígitos) [cite: 25, 234-235]
-  uio[0]: "DIG_SEL_U" # Selección de Unidades
-  uio[1]: "DIG_SEL_D" # Selección de Decenas
-  uio[2]: "DIG_SEL_C" # Selección de Centenas
+  uio[0]: "DIG_SEL_U"
+  uio[1]: "DIG_SEL_D"
+  uio[2]: "DIG_SEL_C"
   uio[3]: ""
   uio[4]: ""
   uio[5]: ""
   uio[6]: ""
   uio[7]: ""
 
-# No cambiar
 yaml_version: 6
