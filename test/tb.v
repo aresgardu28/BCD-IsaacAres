@@ -85,7 +85,7 @@ module tb ();
   // --- INSTANCIACIÓN DEL PROYECTO ---
   // IMPORTANTE: Asegúrate de que 'tt_um_reloj_binario' sea el nombre exacto 
   // que pusiste en tu archivo principal de Verilog.
-  tt_um_BDC user_project (
+  tt_um_BCD user_project (
 
 `ifdef GL_TEST
       .VPWR(VPWR),
