@@ -70,7 +70,7 @@ module tt_um_BCD (
 
   // 3. INSTANCIA BCD (Desde bcd.v)
   wire [3:0] c, d, u;
-  BCD_Converter bcd_inst (.bin_in(contador_reg), .bcd_centenas(c), .bcd_decenas(d), .bcd_unidades(u));
+  BCD bcd_inst (.bin_in(contador_reg), .bcd_centenas(c), .bcd_decenas(d), .bcd_unidades(u));
 
   // 4. MULTIPLEXADO RÁPIDO
   reg [15:0] refresh_cnt;
@@ -92,7 +92,7 @@ module tt_um_BCD (
 
   // 5. DECODIFICADOR Y MAPEO ESTÁNDAR TT
   wire [6:0] s;
-  SevenSeg_Encoder seg_inst (.nibble_in(bcd_actual), .segments_out(s));
+  Encoder seg_inst (.nibble_in(bcd_actual), .segments_out(s));
 
   // ASIGNACIÓN SEGÚN ESTÁNDAR TINYTAPEOUT (A=pin0, G=pin6)
   assign uo_out[0] = s[6]; // A (En tu Encoder, s[6] es A si s=7'bABCDEFG)
