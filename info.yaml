@@ -58,7 +58,7 @@
 
 project:
   title:        "Contador BCD 3 Displays"
-  author:       "Ares Garduño e Isaac González"
+  author:       "Ares e Isaac"
   discord:      ""
   description:  "Contador binario de 8 bits a 3 displays 7 seg"
   language:     "Verilog"
