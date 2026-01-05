@@ -34,10 +34,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 `default_nettype none
 
-module tt_um_BCD (
+module tt_um_BCD (  // Nombre corregido para info.yaml
     input  wire [7:0] ui_in,    
     output wire [7:0] uo_out,   
     input  wire [7:0] uio_in,   
@@ -47,12 +46,11 @@ module tt_um_BCD (
     input  wire       clk,      
     input  wire       rst_n     
 );
-
   // 1. CONFIGURACIÓN DE PINES
-  assign uio_oe  = 8'b00000111; // Pines 0,1,2 como salidas para control de dígitos
+  assign uio_oe  = 8'b00000111; // Pines 0,1,2 como salidas
   assign uio_out[7:3] = 5'b00000;
 
-  // 2. CONTADOR (Base de tiempo ajustada a 50MHz)
+  // 2. CONTADOR
   reg [23:0] clk_div;
   reg [7:0] contador_reg;
 
@@ -60,7 +58,7 @@ module tt_um_BCD (
     if (!rst_n) begin
       clk_div <= 24'd0;
       contador_reg <= 8'd0;
-    end else if (clk_div >= 24'd12499999) begin // 4Hz
+    end else if (clk_div >= 24'd12499999) begin // 4Hz aprox a 50MHz
       clk_div <= 24'd0;
       contador_reg <= (contador_reg >= 8'd255) ? 8'd0 : contador_reg + 1'b1;
     end else begin
@@ -68,11 +66,11 @@ module tt_um_BCD (
     end
   end
 
-  // 3. INSTANCIA BCD (Desde bcd.v)
+  // 3. INSTANCIA BCD (Corregido nombre del módulo a 'BCD')
   wire [3:0] c, d, u;
   BCD bcd_inst (.bin_in(contador_reg), .bcd_centenas(c), .bcd_decenas(d), .bcd_unidades(u));
 
-  // 4. MULTIPLEXADO RÁPIDO
+  // 4. MULTIPLEXADO
   reg [15:0] refresh_cnt;
   always @(posedge clk) refresh_cnt <= (!rst_n) ? 16'd0 : refresh_cnt + 1'b1;
 
@@ -81,7 +79,6 @@ module tt_um_BCD (
 
   always @(*) begin
     case (refresh_cnt[15:14])
-      // CAMBIO: Si usas transistores NPN, cambia 3'b110 por 3'b001, etc.
       2'b00: begin sel_dig = 3'b110; bcd_actual = u; end 
       2'b01: begin sel_dig = 3'b101; bcd_actual = d; end
       2'b10: begin sel_dig = 3'b011; bcd_actual = c; end
@@ -90,12 +87,12 @@ module tt_um_BCD (
   end
   assign uio_out[2:0] = sel_dig;
 
-  // 5. DECODIFICADOR Y MAPEO ESTÁNDAR TT
+  // 5. DECODIFICADOR (Corregido nombre del módulo a 'Encoder')
   wire [6:0] s;
   Encoder seg_inst (.nibble_in(bcd_actual), .segments_out(s));
 
-  // ASIGNACIÓN SEGÚN ESTÁNDAR TINYTAPEOUT (A=pin0, G=pin6)
-  assign uo_out[0] = s[6]; // A (En tu Encoder, s[6] es A si s=7'bABCDEFG)
+  // ASIGNACIÓN DE SEGMENTOS
+  assign uo_out[0] = s[6]; // A
   assign uo_out[1] = s[5]; // B
   assign uo_out[2] = s[4]; // C
   assign uo_out[3] = s[3]; // D
