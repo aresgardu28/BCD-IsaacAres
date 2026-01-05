@@ -49,8 +49,6 @@
 // endmodule
 
 
-
-
 `default_nettype none
 `timescale 1ns / 1ps
 
@@ -70,7 +68,6 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  // Instanciación corregida: tt_um_BCD
   tt_um_BCD user_project (
       .ui_in  (ui_in),
       .uo_out (uo_out),
