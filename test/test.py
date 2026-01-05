@@ -60,26 +60,17 @@ async def test_project(dut):
     dut.ui_in.value = 0
     dut.uio_in.value = 0
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10) # Esperar 10 ciclos de reloj
+    await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
     dut._log.info("Reset liberado")
 
     # --- Prueba de funcionamiento ---
     dut._log.info("Observando el contador BCD...")
-
-    # Vamos a esperar unos cuantos ciclos para ver el cambio.
-    # Nota: Si tu diseño tiene un divisor de frecuencia interno muy grande 
-    # (ej. para bajar de 10MHz a 1Hz), el test tardará mucho.
-    # Aquí asumimos que queremos ver los primeros cambios en las salidas.
     
     for i in range(10):
         await ClockCycles(dut.clk, 1)
-        # Leemos el valor actual en la salida uo_out
-        valor_salida = dut.uo_out.value
-        dut._log.info(f"Ciclo {i}: Salida uo_out = {valor_salida} (Hex: {valor_salida.hex})")
-
-    # --- Ejemplo de Aserción ---
-    # Si después de unos ciclos esperamos que el contador ya no sea 0:
-    # assert dut.uo_out.value != 0, "Error: El contador no está avanzando"
+        # Obtenemos el valor como entero para evitar el error de '.hex'
+        valor = int(dut.uo_out.value)
+        dut._log.info(f"Ciclo {i}: Salida uo_out = {valor} (Hex: {hex(valor)})")
 
     dut._log.info("Prueba finalizada con éxito")
