@@ -50,23 +50,17 @@
 
 
 
+
 `default_nettype none
 `timescale 1ns / 1ps
 
-/* Este testbench instancia el módulo y crea los cables necesarios
-   que serán controlados y probados por el archivo test.py de cocotb.
-*/
 module tb ();
-
-  // Configuración para generar el archivo de ondas (simulación visual)
-  // Puedes abrir tb.fst con GTKWave para ver cómo se comportan las señales.
   initial begin
     $dumpfile("tb.fst");
     $dumpvars(0, tb);
     #1;
   end
 
-  // Declaración de señales para conectar al módulo
   reg clk;
   reg rst_n;
   reg ena;
@@ -76,30 +70,15 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-`ifdef GL_TEST
-  // Señales de alimentación para pruebas de Gate Level (GL)
-  wire VPWR = 1'b1;
-  wire VGND = 1'b0;
-`endif
-
-  // --- INSTANCIACIÓN DEL PROYECTO ---
-  // IMPORTANTE: Asegúrate de que 'tt_um_reloj_binario' sea el nombre exacto 
-  // que pusiste en tu archivo principal de Verilog.
+  // Instanciación corregida: tt_um_BCD
   tt_um_BCD user_project (
-
-`ifdef GL_TEST
-      .VPWR(VPWR),
-      .VGND(VGND),
-`endif
-
-      .ui_in  (ui_in),    // Entradas dedicadas
-      .uo_out (uo_out),   // Salidas dedicadas
-      .uio_in (uio_in),   // IOs: Camino de entrada
-      .uio_out(uio_out),  // IOs: Camino de salida
-      .uio_oe (uio_oe),   // IOs: Habilitación (0=input, 1=output)
-      .ena    (ena),      // Habilitar (se pone en alto cuando el diseño es seleccionado)
-      .clk    (clk),      // Reloj
-      .rst_n  (rst_n)     // Reset (activo en bajo)
+      .ui_in  (ui_in),
+      .uo_out (uo_out),
+      .uio_in (uio_in),
+      .uio_out(uio_out),
+      .uio_oe (uio_oe),
+      .ena    (ena),
+      .clk    (clk),
+      .rst_n  (rst_n)
   );
-
 endmodule
